@@ -27,11 +27,54 @@ var connection = mysql.createConnection({
 // function for the connection turn on
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
+    // console.log("connected as id " + connection.threadId);
     afterConnection();
 });
 
+// Add query for the 
 
+const revenue = function(test, type){
+    connection.query(`select * from products where id = ${type}`,function (err,results){
+        console.log("**************Adding Money************"); 
+        // console.log(typeof test);  
+        // console.log(test);       
+        //   console.log(type);     
+        //   console.log(`select * from products where id = ${type}`); 
+        //   console.table(results); 
+        //   console.table(results[0].product_sales);
+        // let value = parseFloat(test).toFixed(2)
+        // console.log(typeof value)
+
+        // let saleAmt = parseFloat(test).toFixed(2) + parseFloat(results[0].product_sales).toFixed(2);
+        
+        let saleAmt = parseFloat(test) + parseFloat(results[0].product_sales);
+        // console.table(results[0].product_sales);
+        // console.table(results);
+        // console.log(saleAmt);
+                    // Show the inventory
+            connection.query(`Update products set product_sales = ${saleAmt} where id = ${type}`, function (error, results) {
+                        if (error) throw error;     
+                        
+                        connection.query(`select * from products where id = ${type}`, function (error, results) {
+                            if (error) throw error;                  
+                            // console.table(results); 
+
+                            connection.end();  
+                        })
+        
+                    })
+
+        // console.table(results); 
+
+      
+
+     
+      
+        
+        });
+        
+    // });
+}
 
 
 function afterConnection() {
@@ -88,12 +131,15 @@ function afterConnection() {
                             // console.log(total);
                             console.log(`               Total $ ${test}`);
                             console.log("Thank you for shopping!!  Please come again 🙂");
-
+                    
+                            revenue(test,inquirerResponse.type);
+                 
                         });
+                        
 
 
                     }
-                    connection.end();
+                    // connection.end();    
                 });
 
             });
