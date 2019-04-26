@@ -20,6 +20,46 @@ connection.connect(function (err) {
     afterConnection();
 });
 
+
+// new Department
+const newDept = function(){
+    inquirer
+    .prompt([
+        {
+            type: 'input',
+            message: 'Department name?:',
+            name: 'deptn',
+            // default: true
+        },
+        {
+            type: 'input',
+            message: 'Overhead cost?:',
+            name: 'ohc',
+            // default: true
+        }
+    
+    ]).then(function (inquirerResponse) {
+
+  
+            // Show the inventory
+            connection.query(`Insert into departments (department_name, over_head_costs) values ('${inquirerResponse.deptn}', '${parseFloat(inquirerResponse.ohc).toFixed(2)}')`, function (error, results, fields) {
+                if (error) throw error;
+          
+
+            })
+
+            connection.query('SELECT *from departments', function (error, results, fields) {
+                if (error) throw error;
+                console.table(results);
+
+            });
+
+    });
+}
+
+
+
+
 function afterConnection() {
 
 
@@ -51,6 +91,7 @@ function afterConnection() {
                     break;
                 case "Create New Department":
                     console.log("Create New Department")
+                    newDept();
                     // newProd();
                     break;
                 case "Quit":
